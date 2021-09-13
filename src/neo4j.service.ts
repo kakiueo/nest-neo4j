@@ -51,10 +51,10 @@ export class Neo4jService implements OnApplicationShutdown {
 
   read(
     cypher: string,
-    params?: Record<string, any>,
+    params: Record<string, any> = {},
     databaseOrTransaction?: string | Transaction,
   ): Result {
-    const restructuredParams = Neo4jService.restructureJsonObject(params);
+    const restructuredParams = this.restructureJsonObject(params);
     if (databaseOrTransaction instanceof TransactionImpl) {
       return (<Transaction>databaseOrTransaction).run(cypher, restructuredParams);
     }
@@ -65,10 +65,10 @@ export class Neo4jService implements OnApplicationShutdown {
 
   write(
     cypher: string,
-    params?: Record<string, any>,
+    params: Record<string, any> = {},
     databaseOrTransaction?: string | Transaction,
   ): Result {
-    const restructuredParams = Neo4jService.restructureJsonObject(params);
+    const restructuredParams = this.restructureJsonObject(params);
     if (databaseOrTransaction instanceof TransactionImpl) {
       return (<Transaction>databaseOrTransaction).run(cypher, restructuredParams);
     }
@@ -77,8 +77,8 @@ export class Neo4jService implements OnApplicationShutdown {
     return session.run(cypher, restructuredParams);
   }
 
-  private static restructureJsonObject(params: Record<string, any>) {
-    return params ? JSON.parse(JSON.stringify(params)) : {};
+  private restructureJsonObject(params: Record<string, any>) {
+    return JSON.parse(JSON.stringify(params));
   }
 
   onApplicationShutdown() {
